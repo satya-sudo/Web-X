@@ -5,7 +5,7 @@ from authentication.models import User
 # Create your models here.
 
 class Message(models.Model):
-    id  = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    channel_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user  = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     thread = models.ForeignKey(User, on_delete=models.CASCADE,related_name="messages")
@@ -13,8 +13,9 @@ class Message(models.Model):
 
 class Connections(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="connections")
     connection = models.ForeignKey(User, on_delete=models.CASCADE, related_name='connection')
+    room_id = models.CharField(max_length=200,unique=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class ConnectionRequest(models.Model):  
@@ -37,7 +38,7 @@ class ThreadManager(models.Manager):
         if not thread:
             thread = self.create(user1=user1,user2=user2,channel_id=channel_id)
         return thread
-    def find(self,user1,user2):
+    def find(self,user1,user2,channel_id):
         thread = None
         try:
             thread = self.get(user1=user1,user2=user2)
@@ -47,6 +48,11 @@ class ThreadManager(models.Manager):
             thread = self.get(user1=user2,user2=user1)
         except: 
             pass
+        try:
+            thread = self.get(channel_id=channel_id)
+        except:
+            pass
+            
         return thread
 
 

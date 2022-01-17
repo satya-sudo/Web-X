@@ -2,12 +2,14 @@ from re import U
 from rest_framework import serializers
 from .models import User
 from django.contrib import auth
+from chat.serializers import UserSerializer
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['phone','username','password']
+        extra_kwargs = {'password':{'write_only':True}}
 
     def validate(self, attrs):
         phone = attrs.get('phone','')

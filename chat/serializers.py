@@ -1,3 +1,4 @@
+from multiprocessing import connection
 from rest_framework import serializers
 from .models import Connections,User,Message
 
@@ -14,6 +15,15 @@ class ConnectionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Connections
         fields = ['user']
+
+class ConnectionRequestSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    connection = UserSerializer(read_only=True)
+    class Meta:
+        model = Connections
+        fields = ['user','connection']
+
+        
 
 
 class MessagesSerializer(serializers.ModelSerializer):

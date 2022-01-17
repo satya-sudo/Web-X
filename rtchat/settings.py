@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'chat',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -103,7 +104,16 @@ SIMPLE_JWT = {
 }
 
 
-WSGI_APPLICATION = 'rtchat.wsgi.application'
+ASGI_APPLICATION = 'rtchat.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 
 # Database
